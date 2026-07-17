@@ -29,7 +29,7 @@ $(APPLICATION_NAME)_FILES += $(Splash_SRC)
 
 $(APPLICATION_NAME)_FILES += $(src_SRC)
 
-$(APPLICATION_NAME)_CFLAGS += -fobjc-arc -Wno-deprecated-declarations -Wno-unused-function -Wno-unused-variable -Wno-unused-value -Wno-module-import-in-extern-c -Wno-unused-but-set-variable -Wno-error=missing-noescape -Wno-error=objc-dictionary-duplicate-keys -Wno-error -Wno-unused-property-ivar -Wno-implicit-function-declaration
+$(APPLICATION_NAME)_CFLAGS += -fobjc-arc -Wno-deprecated-declarations -Wno-unused-function -Wno-unused-variable -Wno-unused-value -Wno-module-import-in-extern-c -Wunused-but-set-variable -Wno-error=missing-noescape -Wno-error=objc-dictionary-duplicate-keys -Wno-error -Wno-unused-property-ivar -Wno-implicit-function-declaration
 
 # [แก้ไข] เปลี่ยนพาร์ทค้นหา Framework และ Header ไปที่โฟลเดอร์ deps
 $(APPLICATION_NAME)_CFLAGS += -Iheaders -Isources -ISplash -Isources/Settings -F./deps -I./deps/ffmpegkit.framework/Headers
@@ -42,7 +42,7 @@ $(APPLICATION_NAME)_SWIFTFLAGS = -I.
 
 # $(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-unused-variable -Wno-unused-value -Wno-unused-function -fvisibility=hidden -IENCRYPT -fbracket-depth=1024
 
-$(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -fvisibility=hidden
+$(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -fvisibility=hidden -Wno-unused-variable
 
 # [แก้ไข] เปลี่ยน -F. เป็น -F./deps เพื่อให้ลิงก์ผ่านโฟลเดอร์ deps
 $(APPLICATION_NAME)_LDFLAGS += -lstdc++ -undefined dynamic_lookup -F./deps -Wl,-rpath,@executable_path/Frameworks
@@ -59,7 +59,7 @@ include $(THEOS_MAKE_PATH)/application.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 before-package::
-	@echo "[*] Copying all FFmpegKit frameworks from deps into App Bundle..."
+	@echo "[[*]] Copying all FFmpegKit frameworks from deps into App Bundle..."
 	@mkdir -p $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks
 	
 	# [แก้ไข] ดึงไฟล์ .framework ทั้ง 8 ตัวจากโฟลเดอร์ deps เข้าไปในแอปพลิเคชันโดยตรง
