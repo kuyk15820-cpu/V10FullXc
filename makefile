@@ -29,7 +29,7 @@ $(APPLICATION_NAME)_FILES += $(Splash_SRC)
 
 $(APPLICATION_NAME)_FILES += $(src_SRC)
 
-$(APPLICATION_NAME)_CFLAGS += -fobjc-arc -Wno-deprecated-declarations -Wno-unused-function -Wno-unused-variable -Wno-unused-value -Wno-module-import-in-extern-c -Wunused-but-set-variable -Wno-error=missing-noescape -Wno-error=objc-dictionary-duplicate-keys -Wno-error -Wno-unused-property-ivar -Wno-implicit-function-declaration
+$(APPLICATION_NAME)_CFLAGS += -fobjc-arc -Wno-deprecated-declarations -Wno-unused-function -Wno-unused-variable -Wno-unused-value -Wno-module-import-in-extern-c -Wno-unused-but-set-variable -Wno-error=missing-noescape -Wno-error=objc-dictionary-duplicate-keys -Wno-error -Wno-unused-property-ivar -Wno-implicit-function-declaration
 
 # [แก้ไข] เปลี่ยนพาร์ทค้นหา Framework และ Header ไปที่โฟลเดอร์ deps
 $(APPLICATION_NAME)_CFLAGS += -Iheaders -Isources -ISplash -Isources/Settings -F./deps -I./deps/ffmpegkit.framework/Headers
