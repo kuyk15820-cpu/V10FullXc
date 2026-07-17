@@ -42,7 +42,7 @@ $(APPLICATION_NAME)_SWIFTFLAGS = -I.
 
 # $(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-unused-variable -Wno-unused-value -Wno-unused-function -fvisibility=hidden -IENCRYPT -fbracket-depth=1024
 
-$(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -fvisibility=hidden -Wno-unused-variable
+$(APPLICATION_NAME)_CCFLAGS += -std=c++17 -fno-rtti -DNDEBUG -Wall -fvisibility=hidden
 
 # [แก้ไข] เปลี่ยน -F. เป็น -F./deps เพื่อให้ลิงก์ผ่านโฟลเดอร์ deps
 $(APPLICATION_NAME)_LDFLAGS += -lstdc++ -undefined dynamic_lookup -F./deps -Wl,-rpath,@executable_path/Frameworks
@@ -59,16 +59,26 @@ include $(THEOS_MAKE_PATH)/application.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 before-package::
-	@echo "[[*]] Copying all FFmpegKit frameworks from deps into App Bundle..."
+	@echo "[*] Copying all FFmpegKit frameworks from deps into App Bundle..."
 	@mkdir -p $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks
 	
 	# [แก้ไข] ดึงไฟล์ .framework ทั้ง 8 ตัวจากโฟลเดอร์ deps เข้าไปในแอปพลิเคชันโดยตรง
 	@cp -a ./deps/*.framework $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/
 	
+	@echo "[*] Fixing permissions for Firebase frameworks..."
+	# สั่งแก้สิทธิ์ไฟล์ Binary ข้างใน Firebase ทั้ง 8 ตัวให้กลับมาเป็น Executable (รันได้) เพื่อให้ Esign และ iOS ยอมรับ
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FirebaseRemoteConfig.framework/FirebaseRemoteConfig
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FirebaseRemoteConfigInterop.framework/FirebaseRemoteConfigInterop
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FirebaseCore.framework/FirebaseCore
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FirebaseCoreInternal.framework/FirebaseCoreInternal
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FirebaseInstallations.framework/FirebaseInstallations
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/FBLPromises.framework/FBLPromises
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/GoogleUtilities.framework/GoogleUtilities
+	@chmod 755 $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/nanopb.framework/nanopb
+	
 	@echo "[*] Cleaning developer headers and modules inside app bundle..."
 	# [แก้ไข] ล้าง Headers และ Modules ของทุก Framework ที่ถูกก๊อปปี้เข้าไปเพื่อประหยัดพื้นที่แอปและลดไฟล์ขยะ
 	@rm -rf $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/*.framework/Headers
-	@rm -rf $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/*.framework/PrivateHeaders
 	@rm -rf $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/Frameworks/*.framework/Modules
 
 after-package::
